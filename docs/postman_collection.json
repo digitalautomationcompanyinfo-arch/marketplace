@@ -1,0 +1,219 @@
+{
+  "info": {
+    "name": "منصة الوساطة الذكية - API Collection",
+    "description": "مجموعة اختبارات شاملة لجميع نقاط النهاية",
+    "version": "1.0.0",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl",      "value": "http://localhost:5000/api/v1" },
+    { "key": "accessToken",  "value": "" },
+    { "key": "providerToken","value": "" },
+    { "key": "adminToken",   "value": "" }
+  ],
+  "item": [
+    {
+      "name": "🔐 Auth",
+      "item": [
+        {
+          "name": "تسجيل مستخدم جديد",
+          "event": [{ "listen": "test", "script": { "exec": [
+            "const res = pm.response.json();",
+            "if(res.success) pm.collectionVariables.set('accessToken', res.data.accessToken);",
+            "pm.test('Status 201', () => pm.response.to.have.status(201));",
+            "pm.test('Has token', () => pm.expect(res.data.accessToken).to.be.a('string'));"
+          ]}}],
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/auth/register",
+            "body": { "mode": "raw", "raw": "{\"full_name\":\"أحمد محمد\",\"phone\":\"0501234567\",\"password\":\"Password123!\"}", "options": { "raw": { "language": "json" }}}
+          }
+        },
+        {
+          "name": "تسجيل الدخول",
+          "event": [{ "listen": "test", "script": { "exec": [
+            "const res = pm.response.json();",
+            "if(res.success) pm.collectionVariables.set('accessToken', res.data.accessToken);",
+            "pm.test('Status 200', () => pm.response.to.have.status(200));"
+          ]}}],
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/auth/login",
+            "body": { "mode": "raw", "raw": "{\"identifier\":\"0501234567\",\"password\":\"Password123!\"}", "options": { "raw": { "language": "json" }}}
+          }
+        },
+        {
+          "name": "التحقق من OTP",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/auth/verify-otp",
+            "body": { "mode": "raw", "raw": "{\"identifier\":\"0501234567\",\"code\":\"123456\"}", "options": { "raw": { "language": "json" }}}
+          }
+        }
+      ]
+    },
+    {
+      "name": "👥 Users",
+      "item": [
+        {
+          "name": "الملف الشخصي",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/users/profile",
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{accessToken}}" }]}
+          }
+        },
+        {
+          "name": "المفضلة",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/users/favorites",
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{accessToken}}" }]}
+          }
+        },
+        {
+          "name": "إضافة/إزالة مفضلة",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/users/favorites/toggle",
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{accessToken}}" }]},
+            "body": { "mode": "raw", "raw": "{\"provider_uuid\":\"YOUR_PROVIDER_UUID\"}", "options": { "raw": { "language": "json" }}}
+          }
+        }
+      ]
+    },
+    {
+      "name": "🏪 Providers",
+      "item": [
+        {
+          "name": "قائمة المزودين",
+          "event": [{ "listen": "test", "script": { "exec": [
+            "pm.test('Status 200', () => pm.response.to.have.status(200));",
+            "pm.test('Has providers array', () => pm.expect(pm.response.json().data.providers).to.be.an('array'));"
+          ]}}],
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/providers?page=1&limit=10&sort=rating", "query": [
+              { "key": "page", "value": "1" }, { "key": "limit", "value": "10" }, { "key": "sort", "value": "rating" }
+            ]}
+          }
+        },
+        {
+          "name": "المزودون القريبون",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/providers/nearby?lat=24.7136&lng=46.6753&radius=10", "query": [
+              { "key": "lat", "value": "24.7136" }, { "key": "lng", "value": "46.6753" }, { "key": "radius", "value": "10" }
+            ]}
+          }
+        },
+        {
+          "name": "تفاصيل مزود",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/providers/YOUR_PROVIDER_UUID"
+          }
+        }
+      ]
+    },
+    {
+      "name": "🔍 Search",
+      "item": [
+        {
+          "name": "بحث شامل",
+          "event": [{ "listen": "test", "script": { "exec": [
+            "pm.test('Status 200', () => pm.response.to.have.status(200));",
+            "pm.test('Has results', () => pm.expect(pm.response.json().data.results).to.be.an('array'));"
+          ]}}],
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/search?q=مطعم&limit=10", "query": [
+              { "key": "q", "value": "مطعم" }, { "key": "limit", "value": "10" }
+            ]}
+          }
+        },
+        {
+          "name": "اقتراحات تلقائية",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/search/autocomplete?q=مط", "query": [{ "key": "q", "value": "مط" }]}
+          }
+        },
+        {
+          "name": "الكلمات الرائجة",
+          "request": { "method": "GET", "url": "{{baseUrl}}/search/trending" }
+        }
+      ]
+    },
+    {
+      "name": "💬 Messages",
+      "item": [
+        {
+          "name": "المحادثات",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/messages/user/conversations",
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{accessToken}}" }]}
+          }
+        },
+        {
+          "name": "إنشاء/جلب محادثة",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/messages/user/conversations",
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{accessToken}}" }]},
+            "body": { "mode": "raw", "raw": "{\"provider_uuid\":\"YOUR_PROVIDER_UUID\"}", "options": { "raw": { "language": "json" }}}
+          }
+        }
+      ]
+    },
+    {
+      "name": "💳 Subscriptions",
+      "item": [
+        {
+          "name": "خطط الاشتراك",
+          "event": [{ "listen": "test", "script": { "exec": [
+            "pm.test('Status 200', () => pm.response.to.have.status(200));",
+            "pm.test('Has plans', () => pm.expect(pm.response.json().data).to.be.an('array'));"
+          ]}}],
+          "request": { "method": "GET", "url": "{{baseUrl}}/subscriptions/plans" }
+        }
+      ]
+    },
+    {
+      "name": "⚙️ Admin",
+      "item": [
+        {
+          "name": "Dashboard",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/admin/dashboard",
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{adminToken}}" }]}
+          }
+        },
+        {
+          "name": "طلبات الانتظار",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/admin/providers/pending",
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{adminToken}}" }]}
+          }
+        }
+      ]
+    },
+    {
+      "name": "❤️ Health",
+      "item": [
+        {
+          "name": "Health Check",
+          "event": [{ "listen": "test", "script": { "exec": [
+            "pm.test('Status 200', () => pm.response.to.have.status(200));",
+            "pm.test('Status ok', () => pm.expect(pm.response.json().status).to.equal('ok'));"
+          ]}}],
+          "request": { "method": "GET", "url": "http://localhost:5000/health" }
+        }
+      ]
+    }
+  ]
+}
+

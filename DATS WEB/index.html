@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>الاتمتة الرقمية | Digital Automation</title>
+    <meta name="description" content="شركة الاتمتة الرقمية - حلول الذكاء الاصطناعي وأتمتة الأعمال وتطوير التطبيقات في السودان" />
+    <meta name="author" content="Digital Automation" />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>"
+    />
+
+    <!-- Keywords -->
+    <meta name="keywords" content="الاتمتة الرقمية, ذكاء اصطناعي, أتمتة الأعمال, تطوير تطبيقات, السودان, كسلا, digital automation, AI, Sudan" />
+    <meta name="robots" content="index, follow" />
+    <meta name="language" content="ar" />
+    <meta name="geo.region" content="SD-KA" />
+    <meta name="geo.placename" content="Kassala, Sudan" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="الاتمتة الرقمية | Digital Automation Sudan" />
+    <meta property="og:description" content="شركة الاتمتة الرقمية - حلول الذكاء الاصطناعي وأتمتة الأعمال وتطوير التطبيقات في السودان، كسلا" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://digital-automation.onhercules.app" />
+    <meta property="og:locale" content="ar_SA" />
+    <meta property="og:locale:alternate" content="en_US" />
+    <meta property="og:locale:alternate" content="fr_FR" />
+    <meta property="og:site_name" content="الاتمتة الرقمية" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="الاتمتة الرقمية | Digital Automation Sudan" />
+    <meta name="twitter:description" content="حلول الذكاء الاصطناعي وأتمتة الأعمال في السودان" />
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "الاتمتة الرقمية",
+      "alternateName": "Digital Automation",
+      "url": "https://digital-automation.onhercules.app",
+      "description": "شركة الاتمتة الرقمية - حلول الذكاء الاصطناعي وأتمتة الأعمال وتطوير التطبيقات في السودان",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "كسلا",
+        "addressRegion": "ولاية كسلا",
+        "addressCountry": "SD"
+      },
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+249914124471",
+        "contactType": "customer service",
+        "availableLanguage": ["Arabic", "English", "French", "Italian", "Chinese"]
+      },
+      "sameAs": [
+        "https://linkedin.com/company/digital-automation-sd",
+        "https://wa.me/249914124471",
+        "https://wa.me/249118099447"
+      ],
+      "areaServed": {
+        "@type": "Country",
+        "name": "Sudan"
+      },
+      "serviceType": [
+        "Artificial Intelligence Solutions",
+        "Business Automation",
+        "Application Development",
+        "Digital Transformation"
+      ]
+    }
+    </script>
+
+    <!-- Fonts: Cairo for Arabic, Geist for Latin -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+    <!-- Dark mode flash prevention -->
+    <script>
+      try {
+        let theme = localStorage.getItem("theme");
+        if (theme === "system" || !theme) {
+          let prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+          theme = prefersDark ? "dark" : "light";
+        }
+        document.documentElement.classList.add(theme);
+      } catch (e) {}
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
