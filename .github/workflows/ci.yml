@@ -1,0 +1,52 @@
+name: CI
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install backend dependencies
+        run: npm ci
+        working-directory: ./backend
+
+      - name: Install admin dependencies
+        run: npm ci
+        working-directory: ./admin_dashboard
+
+      - name: Lint backend
+        run: npm run lint
+        working-directory: ./backend
+
+      - name: Lint admin dashboard
+        run: npm run lint
+        working-directory: ./admin_dashboard
+
+      - name: Run backend tests
+        run: npm test
+        working-directory: ./backend
+
+      - name: Build Docker images
+        run: |
+          docker compose build backend admin
+
+      - name: Push Docker images (optional)
+        if: github.ref == 'refs/heads/main'
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: |
+          echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+          docker push your-registry/marketplace-backend:latest
+          docker push your-registry/marketplace-admin:latest
